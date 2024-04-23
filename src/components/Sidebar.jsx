@@ -35,19 +35,6 @@ export default function Sidebar({
           );
         })}
       </ul>
-      {/* <section className="mt-8">
-        {projects.map((pr) => {
-          return (
-            <div
-              key={pr.id}
-              onClick={() => handleProjectSelect(pr.id)}
-              className="px-2 py-2 rounded-md text-stone-400 hover:bg-stone-800 hover:text-stone-200 cursor-pointer"
-            >
-              {pr.title}
-            </div>
-          );
-        })}
-      </section> */}
     </aside>
   );
 }

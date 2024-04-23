@@ -35,23 +35,12 @@ export default function Tasks({
       hour: "numeric",
     });
   }
-  // const taskRef = useRef();
-  // function handleSaveTask() {
-  //   const enteredTask = taskRef.current.value;
-  //   handleAddTask({
-  //     id: Math.random(),
-  //     title: enteredTask,
-  //     createdAt: new Date(),
-  //   });
-  // }
   return (
     <section>
       <h2 className="text-2xl font-bold text-stone-700 mb-4">Tasks</h2>
       <div className="flex items-center gap-4">
         <input
-          // ref={taskRef}
           type="text"
-          // className="border-stone-200 bg-stone-200 text-black focus-visible:border-stone-300 rounded w-[50%] p-1"
           className="w-64 px-2 py-1 rounded-sm bg-stone-200"
           value={task.title}
           onChange={(e) => setTask({ ...task, title: e.target.value })}
@@ -59,7 +48,6 @@ export default function Tasks({
         <button
           className="ml-4 text-stone-700 hover:text-stone-950 hover:underline"
           onClick={() => addTask(task)}
-          // onClick={handleSaveTask}
         >
           Add Task
         </button>
@@ -71,19 +59,15 @@ export default function Tasks({
       )}
 
       {todoTasks.length > 0 && (
-        <ul
-          className="mt-8"
-          // className="p-4 mt-8 rounded-md bg-stone-200"
-        >
+        <ul className="mt-8">
           {todoTasks.map((task) => {
             return (
               <li
                 key={task.id}
                 className="px-4 py-2 mb-3 rounded-lg bg-stone-200 text-black w-full flex justify-between items-start"
-                // className="flex justify-between my-4"
               >
                 <div className="flex flex-col items-start">
-                  <span>{task.title}</span>
+                  <span className="">{task.title}</span>
                   <span className="text-xs font-light text-stone-500">
                     {formattedDate(task.createdAt)}
                   </span>
@@ -117,7 +101,6 @@ export default function Tasks({
                 <li
                   key={task.id}
                   className="px-4 py-2 mb-3 rounded-lg bg-stone-100 text-black w-full flex justify-between items-center"
-                  // className="flex justify-between my-4"
                 >
                   <div className="flex flex-col">
                     <span className="line-through text-stone-600 font-extralight">
