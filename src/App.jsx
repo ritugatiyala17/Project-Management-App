@@ -6,7 +6,7 @@ import Project from "./components/Project";
 import CreateProject from "./components/CreateProject";
 import NoProjectSelected from "./components/NoProjectSelected";
 
-import backgroundImage from "./assets/wallpaperflare.com_wallpaper_8.jpg";
+import backgroundImage from "./assets/bg-1.jpeg";
 function App() {
   /**
    * Code Refactor Start
@@ -14,11 +14,53 @@ function App() {
 
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
-    projects: [],
+    projects: [
+      {
+        id: 1,
+        title: "Learning React",
+        description: "Learn react from the group up",
+        dueDate: "2024-12-29",
+      },
+      {
+        id: 2,
+        title: "Fitness",
+        description:
+          "All my experiences about health fitness and journalling my journey ",
+        dueDate: "2024-11-15",
+      },
+    ],
+    tasks: [
+      {
+        id: Math.random(),
+        title: "Arms Workout",
+        projectId: 2,
+        createdAt: Date.now(),
+        isComplete: false,
+      },
+      {
+        id: Math.random(),
+        title: "Legs Workout",
+        projectId: 2,
+        createdAt: Date.now(),
+        isComplete: false,
+      },
+      {
+        id: Math.random(),
+        title: "Ashtanga",
+        projectId: 2,
+        createdAt: Date.now(),
+        modifiedAt: Date.now(),
+        isComplete: true,
+      },
+    ],
   });
 
-  const currentSelectedProject = projectsState.projects.find(
+  const selectedProject = projectsState.projects.find(
     (pr) => pr.id === projectsState.selectedProjectId
+  );
+
+  const selectedProjectTasks = projectsState.tasks.filter(
+    (task) => task.projectId === projectsState.selectedProjectId
   );
 
   function handleCreateProject() {
@@ -41,68 +83,95 @@ function App() {
 
   function handleSubmitProject(project) {
     setProjectsState((prevState) => {
-      const updatedProjects = Array.from(prevState.projects);
-      updatedProjects.push({
-        id: prevState.projects.length + 1,
+      const newProject = {
         ...project,
-      });
-      const newSelectedProjectId = prevState.projects.length + 1;
+        id: Math.random(),
+      };
       return {
-        selectedProjectId: newSelectedProjectId,
-        projects: updatedProjects,
+        ...prevState,
+        selectedProjectId: newProject.id,
+        projects: [...prevState.projects, newProject],
+      };
+    });
+  }
+
+  function handleCancelProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
       };
     });
   }
 
   function handleAddTaskToSelectedProject(task) {
     setProjectsState((prevState) => {
-      const updatedProjects = Array.from(prevState.projects);
-      const currentProject = updatedProjects.findIndex(
-        (pr) => pr.id === currentSelectedProject.id
-      );
-      if (currentProject > -1) {
-        updatedProjects[currentProject].tasks.push(task);
-      }
+      const newTask = {
+        ...task,
+        createdAt: Date.now(),
+        projectId: projectsState.selectedProjectId,
+      };
       return {
         ...prevState,
-        projects: updatedProjects,
+        tasks: [...prevState.tasks, newTask],
       };
     });
   }
 
   function handleClearTaskToSelectedProject(task) {
     setProjectsState((prevState) => {
-      const updatedProjects = Array.from(prevState.projects);
-      const currentProject = updatedProjects.findIndex(
-        (pr) => pr.id === currentSelectedProject.id
-      );
-      if (currentProject > -1) {
-        const currentTask = updatedProjects[currentProject].tasks.findIndex(
-          (t) => t.id === task.id
-        );
-        if (currentTask > -1) {
-          updatedProjects[currentProject].tasks.splice(currentTask, 1);
-        }
-      }
       return {
         ...prevState,
-        projects: updatedProjects,
+        tasks: prevState.tasks.filter((t) => t.id !== task.id),
       };
     });
   }
 
-  function handleProjectDelete(project) {
+  function handleCompleteTask(task) {
     setProjectsState((prevState) => {
-      const updatedProjects = Array.from(prevState.projects);
-      const currentProject = updatedProjects.findIndex(
-        (pr) => pr.id === currentSelectedProject.id
-      );
-      if (currentProject > -1) {
-        updatedProjects.splice(currentProject, 1);
-      }
+      const completedTask = {
+        ...task,
+        isComplete: true,
+        modifiedAt: Date.now(),
+      };
+      const remainingTasks = prevState.tasks.filter((t) => t.id !== task.id);
       return {
+        ...prevState,
+        tasks: [...remainingTasks, completedTask],
+      };
+    });
+  }
+
+  function handleUndoTask(task) {
+    setProjectsState((prevState) => {
+      const remainingTasks = prevState.tasks.filter((t) => t.id !== task.id);
+      const undoTask = {
+        ...task,
+        isComplete: false,
+        modifiedAt: Date.now(),
+      };
+      return {
+        ...prevState,
+        tasks: [undoTask, ...remainingTasks],
+      };
+    });
+  }
+
+  function handleProjectDelete() {
+    setProjectsState((prevState) => {
+      // const updatedProjects = Array.from(prevState.projects);
+      // const currentProject = updatedProjects.findIndex(
+      //   (pr) => pr.id === projectsState.selectedProjectId
+      // );
+      // if (currentProject > -1) {
+      //   updatedProjects.splice(currentProject, 1);
+      // }
+      return {
+        ...prevState,
         selectedProjectId: undefined,
-        projects: updatedProjects,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
       };
     });
   }
@@ -217,8 +286,8 @@ function App() {
   // }
   return (
     <main
-      className="h-screen py-8 flex gap-8 bg-cover bg-left"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="h-screen py-8 flex gap-8 bg-cover bg-left overflow-y-auto"
+      // style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       {/* <Sidebar
         projects={projects}
@@ -245,6 +314,7 @@ function App() {
 
       <Sidebar
         projects={projectsState.projects}
+        selectedProjectId={projectsState.selectedProjectId}
         handleCreateProject={handleCreateProject}
         handleProjectSelect={handleProjectSelect}
       />
@@ -254,15 +324,21 @@ function App() {
       )}
 
       {projectsState && projectsState.selectedProjectId === null && (
-        <CreateProject handleSubmitProject={handleSubmitProject} />
+        <CreateProject
+          onSave={handleSubmitProject}
+          onCancel={handleCancelProject}
+        />
       )}
 
       {projectsState && projectsState.selectedProjectId && (
         <Project
-          selectedProject={currentSelectedProject}
+          selectedProject={selectedProject}
+          tasks={selectedProjectTasks}
           handleAddTaskToSelectedProject={handleAddTaskToSelectedProject}
           handleClearTaskToSelectedProject={handleClearTaskToSelectedProject}
-          handleProjectDelete={handleProjectDelete}
+          onDelete={handleProjectDelete}
+          handleCompleteTask={handleCompleteTask}
+          handleUndoTask={handleUndoTask}
         />
       )}
     </main>
