@@ -2,7 +2,7 @@ import Button from "./Button";
 
 export default function Sidebar({
   projects,
-  handleProjectSelect,
+  handleSelectProject,
   handleCreateProject,
   selectedProjectId,
 }) {
@@ -27,7 +27,7 @@ export default function Sidebar({
             <li key={project.id}>
               <button
                 className={cssClasses}
-                onClick={() => handleProjectSelect(project.id)}
+                onClick={() => handleSelectProject(project.id)}
               >
                 {project.title}
               </button>

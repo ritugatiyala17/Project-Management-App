@@ -68,7 +68,7 @@ function App() {
     });
   }
 
-  function handleProjectSelect(projectId) {
+  function handleSelectProject(projectId) {
     setProjectsState((prevState) => {
       return {
         ...prevState,
@@ -99,8 +99,19 @@ function App() {
       };
     });
   }
+  function handleDeleteProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+      };
+    });
+  }
 
-  function handleAddTaskToSelectedProject(task) {
+  function handleAddTask(task) {
     setProjectsState((prevState) => {
       const newTask = {
         ...task,
@@ -114,7 +125,7 @@ function App() {
     });
   }
 
-  function handleClearTaskToSelectedProject(task) {
+  function handleClearTask(task) {
     setProjectsState((prevState) => {
       return {
         ...prevState,
@@ -153,17 +164,6 @@ function App() {
     });
   }
 
-  function handleProjectDelete() {
-    setProjectsState((prevState) => {
-      return {
-        ...prevState,
-        selectedProjectId: undefined,
-        projects: prevState.projects.filter(
-          (project) => project.id !== prevState.selectedProjectId
-        ),
-      };
-    });
-  }
   return (
     <main
       className="h-screen py-8 flex gap-8 bg-cover bg-left overflow-y-auto"
@@ -173,7 +173,7 @@ function App() {
         projects={projectsState.projects}
         selectedProjectId={projectsState.selectedProjectId}
         handleCreateProject={handleCreateProject}
-        handleProjectSelect={handleProjectSelect}
+        handleSelectProject={handleSelectProject}
       />
 
       {projectsState && projectsState.selectedProjectId === undefined && (
@@ -191,9 +191,9 @@ function App() {
         <Project
           selectedProject={selectedProject}
           tasks={selectedProjectTasks}
-          handleAddTaskToSelectedProject={handleAddTaskToSelectedProject}
-          handleClearTaskToSelectedProject={handleClearTaskToSelectedProject}
-          onDelete={handleProjectDelete}
+          handleAddTask={handleAddTask}
+          handleClearTask={handleClearTask}
+          onDelete={handleDeleteProject}
           handleCompleteTask={handleCompleteTask}
           handleUndoTask={handleUndoTask}
         />

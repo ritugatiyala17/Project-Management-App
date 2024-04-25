@@ -3,8 +3,8 @@ import Tasks from "./Tasks";
 export default function Project({
   selectedProject,
   tasks,
-  handleAddTaskToSelectedProject,
-  handleClearTaskToSelectedProject,
+  handleAddTask,
+  handleClearTask,
   onDelete,
   handleCompleteTask,
   handleUndoTask,
@@ -39,8 +39,8 @@ export default function Project({
       </header>
       <Tasks
         tasks={tasks}
-        handleAddTask={handleAddTaskToSelectedProject}
-        handleClearTask={handleClearTaskToSelectedProject}
+        handleAddTask={handleAddTask}
+        handleClearTask={handleClearTask}
         handleCompleteTask={handleCompleteTask}
         handleUndoTask={handleUndoTask}
       />

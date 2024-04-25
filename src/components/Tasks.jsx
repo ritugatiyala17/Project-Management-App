@@ -47,6 +47,7 @@ export default function Tasks({
         ></input>
         <button
           className="ml-4 text-stone-700 hover:text-stone-950 hover:underline"
+          disabled={task.title.trim().length === 0}
           onClick={() => addTask(task)}
         >
           Add Task
